@@ -1,0 +1,16 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "ServiceBusConnection": "<local Service Bus connection string>",
+    "SERVICE_BUS_NOTIFICATION_QUEUE": "notifications",
+    "MONGO_URI": "mongodb://127.0.0.1:27017/kubecart",
+    "SMTP_HOST": "smtp.example.com",
+    "SMTP_PORT": "587",
+    "SMTP_SECURE": "false",
+    "SMTP_USER": "smtp-user",
+    "SMTP_PASS": "smtp-password",
+    "SMTP_FROM": "no-reply@example.com"
+  }
+}

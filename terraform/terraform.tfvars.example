@@ -1,0 +1,13 @@
+# Copy this file to terraform.tfvars before running terraform plan.
+
+project_name  = "kubecart"
+location      = "Central India"
+
+# Use 4-6 lowercase letters or numbers that are unique to you.
+unique_suffix = "a1b2c3"
+
+domain_name = "www.aasikdevops.website"
+
+source_control_repo_url = "https://github.com/your-account/your-repository"
+source_control_branch   = "main"
+

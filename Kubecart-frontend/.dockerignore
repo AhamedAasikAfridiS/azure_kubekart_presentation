@@ -1,0 +1,6 @@
+.env
+node_modules/
+build/
+npm-debug.log
+*.log
+entrypoint.sh

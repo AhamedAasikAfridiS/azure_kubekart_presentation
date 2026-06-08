@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#ffe4e6"/>
+  <rect x="300" y="210" width="200" height="360" rx="30" fill="#e11d48"/>
+  <rect x="340" y="160" width="120" height="70" rx="14" fill="#fb7185"/>
+  <circle cx="400" cy="390" r="45" fill="#fecdd3"/>
+  <text x="400" y="680" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" fill="#881337">Beauty</text>
+</svg>
