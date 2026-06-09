@@ -85,6 +85,7 @@ module "key_vault" {
   cosmos_connection_string      = module.cosmos_db.connection_string
   storage_connection_string     = module.storage.connection_string
   service_bus_connection_string = module.service_bus.connection_string
+  terraform_runner_ip_address   = var.terraform_runner_ip_address
   tags                          = local.common_tags
 }
 
@@ -125,16 +126,4 @@ module "application_gateway" {
   listener_hostname          = var.domain_name
   log_analytics_workspace_id = module.monitoring.id
   tags                       = local.common_tags
-}
-
-module "front_door" {
-  source = "./modules/front_door"
-
-  profile_name                    = local.front_door_name
-  endpoint_name                   = local.front_door_name
-  resource_group_name             = module.resource_group.name
-  application_gateway_fqdn        = module.application_gateway.public_fqdn
-  application_gateway_host_header = var.domain_name
-  log_analytics_workspace_id      = module.monitoring.id
-  tags                            = local.common_tags
 }

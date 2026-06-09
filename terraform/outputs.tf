@@ -23,8 +23,3 @@ output "app_service_default_hostname" {
 output "application_gateway_public_fqdn" {
   value = module.application_gateway.public_fqdn
 }
-
-output "front_door_endpoint_hostname" {
-  value = module.front_door.endpoint_hostname
-}
-

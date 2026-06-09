@@ -8,4 +8,7 @@ domain_name = "www.aasikdevops.website"
 
 source_control_repo_url = "https://github.com/your-account/your-repository"
 
-source_control_branch   = "main"
+source_control_branch = "main"
+
+# Public IPv4 address of the machine currently running Terraform.
+terraform_runner_ip_address = "203.99.40.21"

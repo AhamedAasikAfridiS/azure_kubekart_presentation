@@ -32,3 +32,7 @@ variable "source_control_branch" {
   default     = "main"
 }
 
+variable "terraform_runner_ip_address" {
+  description = "Public IPv4 address of the machine running Terraform, allowed through the Key Vault firewall."
+  type        = string
+}

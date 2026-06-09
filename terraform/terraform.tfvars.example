@@ -9,5 +9,7 @@ unique_suffix = "a1b2c3"
 domain_name = "www.aasikdevops.website"
 
 source_control_repo_url = "https://github.com/your-account/your-repository"
-source_control_branch   = "main"
+source_control_branch = "main"
 
+# Replace with the public IPv4 address returned by https://api.ipify.org.
+terraform_runner_ip_address = "203.0.113.10"

@@ -43,6 +43,10 @@ variable "service_bus_connection_string" {
   sensitive = true
 }
 
+variable "terraform_runner_ip_address" {
+  type = string
+}
+
 variable "tags" {
   type = map(string)
 }
@@ -53,9 +57,15 @@ resource "azurerm_key_vault" "this" {
   location                      = var.location
   tenant_id                     = data.azurerm_client_config.current.tenant_id
   sku_name                      = "standard"
-  public_network_access_enabled = false
+  public_network_access_enabled = true
   purge_protection_enabled      = true
   soft_delete_retention_days    = 7
+
+  network_acls {
+    bypass         = "AzureServices"
+    default_action = "Deny"
+    ip_rules       = ["${var.terraform_runner_ip_address}/32"]
+  }
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -151,4 +161,3 @@ output "storage_secret_id" {
 output "service_bus_secret_id" {
   value = azurerm_key_vault_secret.service_bus.versionless_id
 }
-

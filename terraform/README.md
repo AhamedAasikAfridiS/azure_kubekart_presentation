@@ -36,14 +36,12 @@ The modules create:
 9. One Service Bus namespace and `notifications` queue.
 10. One Key Vault containing the database, Storage, and Service Bus connection
     strings.
-11. One Linux App Service plan and web app.
+11. One Basic B1 Linux App Service plan and web app.
 12. One WAF_v2 Application Gateway with an HTTP listener for
     `www.aasikdevops.website`.
-13. One Azure Front Door Standard profile that sends traffic to the public
-    Application Gateway.
-14. Private endpoints for App Service, Key Vault, Blob Storage, Cosmos DB, and
+13. Private endpoints for App Service, Key Vault, Blob Storage, Cosmos DB, and
     Service Bus.
-15. Diagnostic settings that send supported logs and metrics to Log Analytics.
+14. Diagnostic settings that send supported logs and metrics to Log Analytics.
 
 ## Module Layout
 
@@ -66,8 +64,7 @@ terraform/
     |-- service_bus/
     |-- key_vault/
     |-- app_service/
-    |-- application_gateway/
-    `-- front_door/
+    `-- application_gateway/
 ```
 
 Each module has only one `main.tf` so you can follow its variables, resources,
@@ -88,18 +85,18 @@ This implementation creates one of each. The App Service identity reads the
 secrets. Cosmos DB, Storage, and Service Bus do not need permission to read
 their own connection strings.
 
-### Front Door is global
+### Application Gateway is the public entry point
 
-Azure Front Door is a global Azure service and therefore is not deployed in
-Central India. Its Application Gateway origin and all regional resources are
-in Central India.
+Azure Front Door is not created because Free Trial and Azure for Students
+subscriptions do not permit it. Users connect directly to the Application
+Gateway public IP through the configured custom domain.
 
-### The Application Gateway is still public
+### Key Vault firewall access for Terraform
 
-Front Door uses the Application Gateway public FQDN as its origin. Because the
-requirements say not to create an NSG, Terraform does not restrict the
-Application Gateway public IP to Front Door traffic only. The listener checks
-the requested host name, but that is not a complete network restriction.
+Key Vault keeps its public endpoint enabled but protected by a deny-by-default
+firewall. Only Azure trusted services and the public IPv4 address in
+`terraform_runner_ip_address` are allowed. Update this value if the machine's
+public IP changes.
 
 ### Continuous deployment and private App Service access
 
@@ -147,6 +144,8 @@ subscription because both use the `dev` name suffix.
 5. Copy `terraform.tfvars.example` to `terraform.tfvars`.
 6. Replace `unique_suffix` with 4-6 lowercase letters or numbers unique to you.
 7. Replace `source_control_repo_url` with the real repository URL.
+8. Set `terraform_runner_ip_address` to the public IPv4 address returned by
+   `https://api.ipify.org`.
 
 ## Beginner Command Order
 
@@ -176,7 +175,6 @@ not run `terraform apply` automatically.
 
 ```text
 User
-  -> Azure Front Door
   -> Application Gateway public HTTP listener
   -> App Service private endpoint
   -> App Service
@@ -189,17 +187,12 @@ resolves that hostname to the App Service private endpoint IP.
 
 ## DNS Note for the Custom Domain
 
-The Application Gateway listener accepts `www.aasikdevops.website`, and Front
-Door sends that host header to Application Gateway. The Terraform code does
-not create the public DNS zone or validate a Front Door custom domain because
-the architecture did not provide DNS-zone ownership details.
-
-The generated Front Door hostname is returned as
-`front_door_endpoint_hostname`.
+The Application Gateway listener accepts `www.aasikdevops.website`. The
+Terraform code does not create the public DNS zone, so point that host name to
+the generated `application_gateway_public_fqdn` value.
 
 ## Cost Warning
 
 This is not a low-cost architecture. Application Gateway WAF_v2, App Service
-Premium v3, Service Bus Premium, Cosmos DB, Front Door, NAT Gateway, private
-endpoints, and Log Analytics can all create charges even with little traffic.
-
+Basic, Service Bus Premium, Cosmos DB, NAT Gateway, private endpoints, and Log
+Analytics can all create charges even with little traffic.

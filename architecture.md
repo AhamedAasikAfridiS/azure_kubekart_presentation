@@ -6,7 +6,7 @@
 - create a subnet for the vnet integration and delegate it to Microsoft.Web/serverFarms
 - create a nat gateway and associate it with the subnet for the vnet integration
 
-- create a azure frontdoor and it should point to the application gateway 
+- use the application gateway public listener as the direct public entry point; do not create Azure Front Door
 
 - create a application gateway and associate it with the subnet for the application gateway and create a public ip for the application gateway and attach that to the gateway , attch the waf policy to that application gateway, create a domain name listener for "www.aasikdevops.website" and it should be a http listener and create a backend setting for http 80 and also create a backend pool that connects to the app service private endpoint and attach that backend pool to the http listener
 
