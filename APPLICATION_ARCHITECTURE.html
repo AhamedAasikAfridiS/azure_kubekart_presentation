@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KubeCart High-Level Application Architecture</title>
+  <style>
+    body { margin: 0; padding: 36px; background: #f8fafc; color: #0f172a; font-family: "Segoe UI", Arial, sans-serif; }
+    main { max-width: 1400px; margin: auto; }
+    h1 { margin: 0 0 8px; color: #0a1a2f; font-size: 34px; }
+    .subtitle { margin: 0 0 28px; color: #64748b; font-size: 17px; }
+    .diagram { overflow-x: auto; padding: 24px; background: white; border: 1px solid #cbd5e1; border-radius: 16px; }
+    h2 { margin-top: 28px; font-size: 22px; }
+    li { margin: 8px 0; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>KubeCart High-Level Application Architecture</h1>
+    <p class="subtitle">React frontend, HTTP REST API, managed Azure services, and asynchronous notifications</p>
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+    User["Customer / Admin"]
+    Entra["Microsoft Entra ID&lt;br/&gt;Authentication &amp; IAM"]
+    subgraph AppService["Azure App Service"]
+        Frontend["React Frontend"]
+        Backend["Node.js / Express Backend&lt;br/&gt;HTTP REST API"]
+        Frontend --&gt;|"HTTPS REST API&lt;br/&gt;JSON /api/*"| Backend
+    end
+    KeyVault["Azure Key Vault&lt;br/&gt;Secrets"]
+    Blob["Azure Blob Storage&lt;br/&gt;Images &amp; Files"]
+    Database[("Azure Cosmos DB&lt;br/&gt;API for MongoDB")]
+    Queue[["Azure Service Bus&lt;br/&gt;Notification Queue"]]
+    Function["Azure Function&lt;br/&gt;Notification Processor"]
+    Email["Email Service"]
+    User --&gt;|"HTTPS"| Frontend
+    User --&gt;|"Sign in"| Entra
+    Entra --&gt;|"Authenticated identity"| Backend
+    Backend --&gt;|"Read secrets"| KeyVault
+    Backend --&gt;|"Store / retrieve files"| Blob
+    Backend --&gt;|"Application data"| Database
+    Backend --&gt;|"Publish notification"| Queue
+    Queue --&gt;|"Queue trigger"| Function
+    Function --&gt;|"Notification logs"| Database
+    Function --&gt;|"Send email"| Email
+      </pre>
+    </div>
+    <h2>Request Flow</h2>
+    <ol>
+      <li>The user signs in through Microsoft Entra ID.</li>
+      <li>The React frontend communicates with Node.js/Express through an HTTPS REST API using JSON.</li>
+      <li>Cosmos DB stores application data, while Blob Storage stores images and files.</li>
+      <li>Service Bus and Azure Functions process notification emails asynchronously.</li>
+    </ol>
+  </main>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  </script>
+</body>
+</html>
